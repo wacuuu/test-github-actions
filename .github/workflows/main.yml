@@ -34,3 +34,16 @@ jobs:
         run: |
           echo Add other actions to build,
           docker build -t github-test:$GITHUB_SHA .
+  test:
+    runs-on: self-hosted
+    steps:
+      - uses: actions/checkout@v2
+
+      - name: build image again
+        run: docker build -t github-test:$GITHUB_SHA .
+
+      - name: start container
+        run: docker run -d -p 8000:80 github-test:$GITHUB_SHA
+      
+      - name: test
+        run: curl localhost:8000
